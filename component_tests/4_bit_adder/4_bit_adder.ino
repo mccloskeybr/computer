@@ -1,18 +1,20 @@
-#define A_0_PORT 13
-#define A_1_PORT 12
-#define A_2_PORT 11
-#define A_3_PORT 10
+#define A_0_PORT 12
+#define A_1_PORT 11
+#define A_2_PORT 10
+#define A_3_PORT 9
 
-#define B_0_PORT 5
-#define B_1_PORT 4
-#define B_2_PORT 3
-#define B_3_PORT 2
+#define B_0_PORT 22
+#define B_1_PORT 24
+#define B_2_PORT 26
+#define B_3_PORT 28
 
-#define SUM_0_PORT 14
-#define SUM_1_PORT 15
-#define SUM_2_PORT 16
-#define SUM_3_PORT 17
-#define C_OUT_PORT 18
+#define SUM_0_PORT 6
+#define SUM_1_PORT 5
+#define SUM_2_PORT 4
+#define SUM_3_PORT 3
+#define C_OUT_PORT 2
+
+char buffer[1024];
 
 void SendA(int a) {
   digitalWrite(A_0_PORT, (a >> 0) & 1);
@@ -36,6 +38,27 @@ int ReadSum() {
          (digitalRead(C_OUT_PORT) << 4);
 }
 
+void Test(int a, int b) {
+  int expected_sum = a + b;
+
+  SendA(a);
+  SendB(b);
+  int actual_sum = ReadSum();
+
+  sprintf(buffer, "%d + %d = %d? : %d ", a, b, expected_sum, actual_sum);
+  Serial.print(buffer);
+  if (actual_sum != expected_sum) { Serial.print("FAIL"); }
+  Serial.println();
+}
+
+void TestAll() {
+  for (int a = 0; a < 1 << 4; a++) {
+    for (int b = 0; b < 1 << 4; b++) {
+      Test(a, b);
+    }
+  }
+}
+
 void setup() {
   pinMode(A_0_PORT, OUTPUT);
   pinMode(A_1_PORT, OUTPUT);
@@ -56,19 +79,7 @@ void setup() {
   // TODO: Also test carry in bit.
   Serial.begin(115200);
   Serial.println("=== NEW TEST ===");
-  char buffer[1024];
-  for (int i = 0; i < 1 << 4; i++) {
-    for (int j = 0; j < 1 << 4; j++) {
-      SendA(i);
-      SendB(j);
-      int sum = ReadSum();
-
-      sprintf(buffer, "%d + %d = %d? : %d ", i, j, i + j, sum);
-      Serial.print(buffer);
-      if (i + j != sum) { Serial.print("FAIL"); }
-      Serial.println();
-    }
-  }
+  TestAll();
 }
 
 void loop() {}

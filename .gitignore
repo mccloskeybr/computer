@@ -1,1 +1,3 @@
 *.lck
+*.kicad_pro
+schematic/computer-backups*
