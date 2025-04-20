@@ -55,6 +55,7 @@ void Test(int d) {
 void TestAll() {
   for (int d = 0; d < 1 << 4; d++) {
     Test(d);
+    delay(500);
   }
 }
 
