@@ -3,29 +3,64 @@ enum SignalType {
   SignalType_High,
 };
 
-struct Connector {
+class Connector {
+ public:
+  Connector();
+  SignalType GetSignal();
+  bool SetSignal(SignalType s);
+  void AddConnection(class Component* component);
+  const std::vector<class Component*>* GetConnections();
+
+ private:
   SignalType signal;
   std::vector<class Component*> connections;
 };
 
+static int next_component_id = 0;
 class Component {
  public:
-  explicit Component();
   virtual ~Component() = default;
-  virtual void Process() = 0;
+  virtual bool Process() = 0;
   virtual Connector* GetOut() = 0;
 
+  const int32_t id = next_component_id++;
+};
+
+class Buffer : public Component {
+ public:
+  Buffer();
+  void SetIn(Connector* i);
+  void SetOut(Connector* o);
+  Connector* GetOut() override;
+  bool Process() override;
+
  private:
-  int32_t id;
+  Connector* in;
+  Connector* out;
+};
+
+class TriStateBuffer : public Component {
+ public:
+  TriStateBuffer();
+  void SetIn(Connector* i);
+  void SetEnable(Connector* e);
+  void SetOut(Connector* o);
+  Connector* GetOut() override;
+  bool Process() override;
+
+ private:
+  Connector* in;
+  Connector* enable;
+  Connector* out;
 };
 
 class NotGate : public Component {
  public:
-  explicit NotGate();
+  NotGate();
   void SetIn(Connector* i);
   void SetOut(Connector* o);
   Connector* GetOut() override;
-  void Process() override;
+  bool Process() override;
 
  private:
   Connector* in;
@@ -34,12 +69,12 @@ class NotGate : public Component {
 
 class NandGate : public Component {
  public:
-  explicit NandGate();
+  NandGate();
   void SetIn0(Connector* i);
   void SetIn1(Connector* i);
   void SetOut(Connector* o);
   Connector* GetOut() override;
-  void Process() override;
+  bool Process() override;
 
  private:
   Connector* in[2];

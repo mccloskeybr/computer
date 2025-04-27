@@ -10,6 +10,8 @@ class Simulation {
   ~Simulation();
   Connector* AddObservableConnector(std::string name, bool is_modifyable);
   Connector* AddConnector();
+  Buffer* AddBuffer();
+  TriStateBuffer* AddTriStateBuffer();
   NotGate* AddNotGate();
   NandGate* AddNandGate();
   void UpdateUi();
@@ -21,5 +23,3 @@ class Simulation {
   std::vector<Connector*> connectors;
   std::vector<Component*> components;
 };
-
-void BuildAdder(Simulation* sim);

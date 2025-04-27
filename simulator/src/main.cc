@@ -28,6 +28,7 @@
 #include <component.h>
 #include <simulator.h>
 
+#include <circuits.cc>
 #include <component.cc>
 #include <simulator.cc>
 
@@ -106,8 +107,40 @@ int main(int argc, char* argv[]) {
   ImGui_ImplOpenGL3_Init();
   ImGui::StyleColorsDark();
 
-  Simulation simulation = {};
-  BuildAdder(&simulation);
+  Simulation sim = {};
+
+  /*
+  Connector* c_in = sim.AddObservableConnector("c_in", true);
+  Connector* a_0_in = sim.AddObservableConnector("a_0", true);
+  Connector* a_1_in = sim.AddObservableConnector("a_1", true);
+  Connector* a_2_in = sim.AddObservableConnector("a_2", true);
+  Connector* a_3_in = sim.AddObservableConnector("a_3", true);
+  Connector* b_0_in = sim.AddObservableConnector("b_0", true);
+  Connector* b_1_in = sim.AddObservableConnector("b_1", true);
+  Connector* b_2_in = sim.AddObservableConnector("b_2", true);
+  Connector* b_3_in = sim.AddObservableConnector("b_3", true);
+  Connector* s_0_out = sim.AddObservableConnector("s_0", false);
+  Connector* s_1_out = sim.AddObservableConnector("s_1", false);
+  Connector* s_2_out = sim.AddObservableConnector("s_2", false);
+  Connector* s_3_out = sim.AddObservableConnector("s_3", false);
+  Connector* c_out = sim.AddObservableConnector("c_out", false);
+  Build4BitAdder(
+      &sim,
+      a_0_in, a_1_in, a_2_in, a_3_in,
+      b_0_in, b_1_in, b_2_in, b_3_in,
+      c_in,
+      s_0_out, s_1_out, s_2_out, s_3_out,
+      c_out);
+  */
+
+  Connector* clock = sim.AddObservableConnector("clock", true);
+  Connector* d_in = sim.AddObservableConnector("d_in", true);
+  Connector* d_out = sim.AddObservableConnector("d_out", true);
+  Connector* d_0 = sim.AddObservableConnector("d_0", true);
+  Connector* d_1 = sim.AddObservableConnector("d_1", true);
+  Connector* d_2 = sim.AddObservableConnector("d_2", true);
+  Connector* d_3 = sim.AddObservableConnector("d_3", true);
+  Build4BitRegister(&sim, clock, d_in, d_out, d_0, d_1, d_2, d_3);
 
   LOG_INFO("Successfully completed startup sequence.");
 
@@ -120,7 +153,7 @@ int main(int argc, char* argv[]) {
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    simulation.UpdateUi();
+    sim.UpdateUi();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
