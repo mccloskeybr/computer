@@ -4,22 +4,21 @@ NandGate::NandGate() {
   out = NULL;
 }
 
-void NandGate::SetIn0(Connector* i) {
+NandGate* NandGate::SetIn(Connector* i_0, Connector* i_1) {
   ASSERT(in[0] == NULL);
-  i->AddConnection(this);
-  in[0] = i;
-}
-
-void NandGate::SetIn1(Connector* i) {
   ASSERT(in[1] == NULL);
-  i->AddConnection(this);
-  in[1] = i;
+  i_0->AddConnection(this);
+  i_1->AddConnection(this);
+  in[0] = i_0;
+  in[1] = i_1;
+  return this;
 }
 
-void NandGate::SetOut(Connector* o) {
+NandGate* NandGate::SetOut(Connector* o) {
   ASSERT(out == NULL);
   o->AddConnection(this);
   out = o;
+  return this;
 }
 
 Connector* NandGate::GetOut() {

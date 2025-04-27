@@ -5,15 +5,12 @@ class Simulator {
  public:
   Simulator() = default;
   ~Simulator();
+
   Connector* AddConnector();
-
-  Clock* AddClock();
-  Buffer* AddBuffer();
-  TriStateBuffer* AddTriStateBuffer();
-  NotGate* AddNotGate();
-  NandGate* AddNandGate();
-
-  void AddCircuit(Circuit* circuit);
+  template <class C>
+  C* AddComponent();
+  template <class C, typename... Args>
+  C* AddCircuit(Args...);
 
   void UpdateUi();
   void UpdateSimulation();

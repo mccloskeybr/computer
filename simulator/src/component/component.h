@@ -30,6 +30,7 @@ class Component {
   virtual ~Component() = default;
   virtual bool Process() = 0;
   virtual Connector* GetOut() = 0;
+  operator Connector*() { return GetOut(); }
 
   const int32_t id = next_component_id++;
 };
@@ -37,8 +38,8 @@ class Component {
 class Buffer : public Component {
  public:
   Buffer();
-  void SetIn(Connector* i);
-  void SetOut(Connector* o);
+  Buffer* SetIn(Connector* i);
+  Buffer* SetOut(Connector* o);
   Connector* GetOut() override;
   bool Process() override;
 
@@ -50,9 +51,9 @@ class Buffer : public Component {
 class TriStateBuffer : public Component {
  public:
   TriStateBuffer();
-  void SetIn(Connector* i);
-  void SetEnable(Connector* e);
-  void SetOut(Connector* o);
+  TriStateBuffer* SetIn(Connector* i);
+  TriStateBuffer* SetEnable(Connector* e);
+  TriStateBuffer* SetOut(Connector* o);
   Connector* GetOut() override;
   bool Process() override;
 
@@ -65,8 +66,8 @@ class TriStateBuffer : public Component {
 class NotGate : public Component {
  public:
   NotGate();
-  void SetIn(Connector* i);
-  void SetOut(Connector* o);
+  NotGate* SetIn(Connector* i);
+  NotGate* SetOut(Connector* o);
   Connector* GetOut() override;
   bool Process() override;
 
@@ -78,9 +79,8 @@ class NotGate : public Component {
 class NandGate : public Component {
  public:
   NandGate();
-  void SetIn0(Connector* i);
-  void SetIn1(Connector* i);
-  void SetOut(Connector* o);
+  NandGate* SetIn(Connector* i_0, Connector* i_1);
+  NandGate* SetOut(Connector* o);
   Connector* GetOut() override;
   bool Process() override;
 
@@ -92,8 +92,8 @@ class NandGate : public Component {
 class Clock : public Component {
  public:
   Clock();
-  void SetOut(Connector* i);
-  void SetFrequencySeconds(float f);
+  Clock* SetOut(Connector* i);
+  Clock* SetFrequencySeconds(float f);
   Connector* GetOut() override;
   bool Process() override;
 

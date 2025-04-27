@@ -14,16 +14,18 @@ bool NotGate::Process() {
   }
 }
 
-void NotGate::SetIn(Connector* i) {
+NotGate* NotGate::SetIn(Connector* i) {
   ASSERT(in == NULL);
   i->AddConnection(this);
   in = i;
+  return this;
 }
 
-void NotGate::SetOut(Connector* o) {
+NotGate* NotGate::SetOut(Connector* o) {
   ASSERT(out == NULL);
   o->AddConnection(this);
   out = o;
+  return this;
 }
 
 Connector* NotGate::GetOut() {

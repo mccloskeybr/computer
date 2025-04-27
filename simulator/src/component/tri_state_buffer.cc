@@ -15,22 +15,25 @@ bool TriStateBuffer::Process() {
   return false;
 }
 
-void TriStateBuffer::SetIn(Connector* i) {
+TriStateBuffer* TriStateBuffer::SetIn(Connector* i) {
   ASSERT(in == NULL);
   i->AddConnection(this);
   in = i;
+  return this;
 }
 
-void TriStateBuffer::SetEnable(Connector* e) {
+TriStateBuffer* TriStateBuffer::SetEnable(Connector* e) {
   ASSERT(enable == NULL);
   e->AddConnection(this);
   enable = e;
+  return this;
 }
 
-void TriStateBuffer::SetOut(Connector* o) {
+TriStateBuffer* TriStateBuffer::SetOut(Connector* o) {
   ASSERT(out == NULL);
   o->AddConnection(this);
   out = o;
+  return this;
 }
 
 Connector* TriStateBuffer::GetOut() {

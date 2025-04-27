@@ -2,33 +2,61 @@
 // Bundled this way to make it easy to have customized UIs per
 // grouping of components.
 
-class Circuit {
- public:
+struct Circuit {
   virtual ~Circuit() = default;
   virtual void UpdateUi() = 0;
 };
 
-class EightBitAdder : public Circuit {
- public:
-  EightBitAdder(class Simulator* sim);
+struct EightBitBus : public Circuit {
+  EightBitBus(class Simulator* sim, std::string name);
   void UpdateUi() override;
 
- private:
-  Connector* a[8];
-  Connector* b[8];
-  Connector* s[8];
+  std::string name;
+  std::array<Connector*, 8> bus;
+};
+
+struct ControlBoard : public Circuit {
+  ControlBoard(class Simulator* sim, std::string name);
+  void UpdateUi() override;
+
+  std::string name;
+  Connector* clock;
+  Connector* a_bus_in;
+  Connector* a_bus_out;
+  Connector* b_bus_in;
+  Connector* b_bus_out;
+  Connector* s_bus_in;
+  Connector* s_bus_out;
+};
+
+class EightBitAdder : public Circuit {
+ public:
+  EightBitAdder(
+      class Simulator* sim, std::string name,
+      std::array<Connector*, 8> a, std::array<Connector*, 8> b, std::array<Connector*, 8> s,
+      Connector* c_in, Connector* c_out);
+  void UpdateUi() override;
+
+  std::string name;
+  std::array<Connector*, 8> a;
+  std::array<Connector*, 8> b;
+  std::array<Connector*, 8> s;
   Connector* c_in;
   Connector* c_out;
 };
 
-class EightBitRegister : public Circuit {
- public:
-  EightBitRegister(class Simulator* sim);
+struct EightBitRegister : public Circuit {
+  EightBitRegister(
+      class Simulator* sim, std::string name,
+      std::array<Connector*, 8> d_in, std::array<Connector*, 8> d_out,
+      Connector* clock, Connector* d_in_en, Connector* d_out_en);
   void UpdateUi() override;
 
- private:
-  Connector* d[8];
+  std::string name;
+  std::array<Connector*, 8> d;
   Connector* clock;
-  Connector* d_in;
-  Connector* d_out;
+  Connector* d_in_en;
+  Connector* d_out_en;
 };
+
+void BuildComputer(class Simulator* sim);

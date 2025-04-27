@@ -8,14 +8,16 @@ Clock::Clock() {
   perf_freq = (float) SDL_GetPerformanceFrequency();
 }
 
-void Clock::SetOut(Connector* o) {
+Clock* Clock::SetOut(Connector* o) {
   ASSERT(out == NULL);
   o->AddConnection(this);
   out = o;
+  return this;
 }
 
-void Clock::SetFrequencySeconds(float f) {
+Clock* Clock::SetFrequencySeconds(float f) {
   freq_s = f;
+  return this;
 }
 
 Connector* Clock::GetOut() {

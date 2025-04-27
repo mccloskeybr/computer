@@ -21,6 +21,7 @@
 #include <vector>
 #include <string>
 #include <deque>
+#include <array>
 
 #include <common/log.h>
 #include <common/macros.h>
@@ -36,7 +37,10 @@
 #include <component/nand_gate.cc>
 #include <component/connector.cc>
 #include <circuit/alu.cc>
+#include <circuit/bus.cc>
 #include <circuit/register.cc>
+#include <circuit/control.cc>
+#include <circuit/computer.cc>
 #include <simulator.cc>
 
 static bool global_running;
@@ -115,9 +119,7 @@ int main(int argc, char* argv[]) {
   ImGui::StyleColorsDark();
 
   Simulator sim = {};
-  sim.AddCircuit(new EightBitAdder(&sim));
-  sim.AddCircuit(new EightBitRegister(&sim));
-
+  BuildComputer(&sim);
   LOG_INFO("Successfully completed startup sequence.");
 
   global_running = true;

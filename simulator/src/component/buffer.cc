@@ -10,16 +10,18 @@ bool Buffer::Process() {
   return out->SetSignal(in->GetSignal());
 }
 
-void Buffer::SetIn(Connector* i) {
+Buffer* Buffer::SetIn(Connector* i) {
   ASSERT(in == NULL);
   i->AddConnection(this);
   in = i;
+  return this;
 }
 
-void Buffer::SetOut(Connector* o) {
+Buffer* Buffer::SetOut(Connector* o) {
   ASSERT(out == NULL);
   o->AddConnection(this);
   out = o;
+  return this;
 }
 
 Connector* Buffer::GetOut() {

@@ -10,38 +10,18 @@ Connector* Simulator::AddConnector() {
   return connector;
 }
 
-Clock* Simulator::AddClock() {
-  Clock* clock = new Clock();
-  components.push_back(clock);
-  return clock;
+template <class C>
+C* Simulator::AddComponent() {
+  C* component = new C();
+  components.push_back(component);
+  return component;
 }
 
-Buffer* Simulator::AddBuffer() {
-  Buffer* buffer = new Buffer();
-  components.push_back(buffer);
-  return buffer;
-}
-
-TriStateBuffer* Simulator::AddTriStateBuffer() {
-  TriStateBuffer* tri_state_buffer = new TriStateBuffer();
-  components.push_back(tri_state_buffer);
-  return tri_state_buffer;
-}
-
-NotGate* Simulator::AddNotGate() {
-  NotGate* not_gate = new NotGate();
-  components.push_back(not_gate);
-  return not_gate;
-}
-
-NandGate* Simulator::AddNandGate() {
-  NandGate* nand_gate = new NandGate();
-  components.push_back(nand_gate);
-  return nand_gate;
-}
-
-void Simulator::AddCircuit(Circuit* circuit) {
+template <class C, typename... Args>
+C* Simulator::AddCircuit(Args... args) {
+  C* circuit = new C(this, args...);
   circuits.push_back(circuit);
+  return circuit;
 }
 
 void Simulator::UpdateUi() {
@@ -51,7 +31,14 @@ void Simulator::UpdateUi() {
 }
 
 void Simulator::UpdateSimulation() {
-  std::deque<Connector*> connector_queue = {connectors.begin(), connectors.end()};
+  std::deque<Connector*> connector_queue = {};
+
+  for (Component* component : components) {
+    if (component->Process()) {
+      connector_queue.push_back(component->GetOut());
+    }
+  }
+
   while (!connector_queue.empty()) {
     Connector* connector = connector_queue.front();
     connector_queue.pop_front();
