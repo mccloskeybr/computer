@@ -10,15 +10,17 @@ class Simulation {
   ~Simulation();
   Connector* AddObservableConnector(std::string name, bool is_modifyable);
   Connector* AddConnector();
+
+  Clock* AddClock();
   Buffer* AddBuffer();
   TriStateBuffer* AddTriStateBuffer();
   NotGate* AddNotGate();
   NandGate* AddNandGate();
+
   void UpdateUi();
+  void UpdateSimulation();
 
  private:
-  void Simulate(Connector* connector);
-
   std::vector<ObservableConnector> observable_connectors;
   std::vector<Connector*> connectors;
   std::vector<Component*> components;

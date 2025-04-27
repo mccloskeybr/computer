@@ -133,14 +133,17 @@ int main(int argc, char* argv[]) {
       c_out);
   */
 
-  Connector* clock = sim.AddObservableConnector("clock", true);
+  Connector* clock_signal = sim.AddObservableConnector("clock", false);
+  Clock* clock = sim.AddClock();
+  clock->SetOut(clock_signal);
+
   Connector* d_in = sim.AddObservableConnector("d_in", true);
   Connector* d_out = sim.AddObservableConnector("d_out", true);
   Connector* d_0 = sim.AddObservableConnector("d_0", true);
   Connector* d_1 = sim.AddObservableConnector("d_1", true);
   Connector* d_2 = sim.AddObservableConnector("d_2", true);
   Connector* d_3 = sim.AddObservableConnector("d_3", true);
-  Build4BitRegister(&sim, clock, d_in, d_out, d_0, d_1, d_2, d_3);
+  Build4BitRegister(&sim, clock_signal, d_in, d_out, d_0, d_1, d_2, d_3);
 
   LOG_INFO("Successfully completed startup sequence.");
 
@@ -153,6 +156,7 @@ int main(int argc, char* argv[]) {
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
+    sim.UpdateSimulation();
     sim.UpdateUi();
 
     ImGui::Render();

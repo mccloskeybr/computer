@@ -15,6 +15,12 @@ Connector* Simulation::AddObservableConnector(std::string name, bool is_modifyab
   return connector;
 }
 
+Clock* Simulation::AddClock() {
+  Clock* clock = new Clock();
+  components.push_back(clock);
+  return clock;
+}
+
 Buffer* Simulation::AddBuffer() {
   Buffer* buffer = new Buffer();
   components.push_back(buffer);
@@ -54,7 +60,6 @@ void Simulation::UpdateUi() {
         } else {
           connector->SetSignal(SignalType_High);
         }
-        Simulate(connector);
       }
     } else {
       ImGui::RadioButton("##non_modifyable", connector->GetSignal() == SignalType_High);
@@ -66,8 +71,8 @@ void Simulation::UpdateUi() {
   ImGui::End();
 }
 
-void Simulation::Simulate(Connector* connector) {
-  std::deque<Connector*> connector_queue = {connector};
+void Simulation::UpdateSimulation() {
+  std::deque<Connector*> connector_queue = {connectors.begin(), connectors.end()};
   while (!connector_queue.empty()) {
     Connector* connector = connector_queue.front();
     connector_queue.pop_front();

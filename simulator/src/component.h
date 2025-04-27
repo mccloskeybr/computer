@@ -80,3 +80,21 @@ class NandGate : public Component {
   Connector* in[2];
   Connector* out;
 };
+
+class Clock : public Component {
+ public:
+  Clock();
+  void SetOut(Connector* i);
+  void SetFrequencySeconds(float f);
+  Connector* GetOut() override;
+  bool Process() override;
+
+ private:
+  Connector* out;
+  float freq_s;
+
+  float time;
+  uint64_t prev_time;
+  uint64_t curr_time;
+  float perf_freq;
+};
