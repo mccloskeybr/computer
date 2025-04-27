@@ -19,7 +19,6 @@ Buffer* Buffer::SetIn(Connector* i) {
 
 Buffer* Buffer::SetOut(Connector* o) {
   ASSERT(out == NULL);
-  o->AddConnection(this);
   out = o;
   return this;
 }

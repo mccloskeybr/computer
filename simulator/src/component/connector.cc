@@ -21,15 +21,12 @@ const std::vector<class Component*>* Connector::GetConnections() {
   return &connections;
 }
 
-void Connector::UpdateUi(bool is_modifyable) {
+void Connector::UpdateUi(Simulator* sim) {
   ImGui::PushID(id);
-  if (is_modifyable) {
-    if (ImGui::RadioButton("##modifyable", (signal == SignalType_High))) {
-      if (signal == SignalType_High) { signal = SignalType_Low;  }
-      else                           { signal = SignalType_High; }
-    }
-  } else {
-    ImGui::RadioButton("##non_modifyable", (signal == SignalType_High));
+  if (ImGui::RadioButton("##modifyable", (signal == SignalType_High))) {
+    if (signal == SignalType_High) { signal = SignalType_Low;  }
+    else                           { signal = SignalType_High; }
+    sim->PushDirtyConnector(this);
   }
   ImGui::PopID();
 }

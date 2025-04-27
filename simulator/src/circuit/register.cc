@@ -66,44 +66,64 @@ void Build1BitRegister(
     ->SetOut(d_out);
 }
 
-EightBitRegister::EightBitRegister(
-    Simulator* sim, std::string name,
-    std::array<Connector*, 8> d_in, std::array<Connector*, 8> d_out,
-    Connector* clock, Connector* d_in_en, Connector* d_out_en) {
+EightBitRegister::EightBitRegister(std::string name) {
   this->name = name;
-  this->clock = clock;
-  this->d_in_en = d_in_en;
-  this->d_out_en = d_out_en;
-  for (int32_t i = 0; i < 8; i++) {
-    this->d[i] = sim->AddConnector();
-  }
-
-  for (int32_t i = 0; i < 8; i++) {
-    Build1BitRegister(sim, clock, d_in_en, d_out_en, d_in[i], d[i], d_out[i]);
-  }
 }
 
-void EightBitRegister::UpdateUi() {
+EightBitRegister* EightBitRegister::SetDIn(std::array<Connector*, 8> d_in_) {
+  this->d_in = d_in_;
+  return this;
+}
+
+EightBitRegister* EightBitRegister::SetDOut(std::array<Connector*, 8> d_out_) {
+  this->d_out = d_out_;
+  return this;
+}
+
+EightBitRegister* EightBitRegister::SetClock(Connector* clock_) {
+  this->clock = clock_;
+  return this;
+}
+
+EightBitRegister* EightBitRegister::SetDInEnable(Connector* d_in_en_) {
+  this->d_in_en = d_in_en_;
+  return this;
+}
+
+EightBitRegister* EightBitRegister::SetDOutEnable(Connector* d_out_en_) {
+  this->d_out_en = d_out_en_;
+  return this;
+}
+
+EightBitRegister* EightBitRegister::Build(Simulator* sim) {
+  for (int32_t i = 0; i < 8; i++) {
+    this->d[i] = sim->AddConnector();
+    Build1BitRegister(sim, clock, d_in_en, d_out_en, d_in[i], d[i], d_out[i]);
+  }
+  return this;
+}
+
+void EightBitRegister::UpdateUi(Simulator* sim) {
   ImGui::Begin(name.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize);
 
   ImGui::Text("Clock: ");
   ImGui::SameLine();
-  clock->UpdateUi(true);
+  clock->UpdateUi(sim);
 
   ImGui::SameLine();
   ImGui::Text("D in: ");
   ImGui::SameLine();
-  d_in_en->UpdateUi(true);
+  d_in_en->UpdateUi(sim);
 
   ImGui::SameLine();
   ImGui::Text("D out: ");
   ImGui::SameLine();
-  d_out_en->UpdateUi(true);
+  d_out_en->UpdateUi(sim);
 
   ImGui::Text("D: ");
   for (int32_t i = 0; i < 8; i++) {
     ImGui::SameLine();
-    d[i]->UpdateUi(true);
+    d[i]->UpdateUi(sim);
   }
 
   ImGui::End();

@@ -16,7 +16,6 @@ NandGate* NandGate::SetIn(Connector* i_0, Connector* i_1) {
 
 NandGate* NandGate::SetOut(Connector* o) {
   ASSERT(out == NULL);
-  o->AddConnection(this);
   out = o;
   return this;
 }

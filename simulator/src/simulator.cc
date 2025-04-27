@@ -19,32 +19,34 @@ C* Simulator::AddComponent() {
 
 template <class C, typename... Args>
 C* Simulator::AddCircuit(Args... args) {
-  C* circuit = new C(this, args...);
+  C* circuit = new C(args...);
   circuits.push_back(circuit);
   return circuit;
 }
 
+void Simulator::PushDirtyConnector(Connector* connector) {
+  dirty_connectors.push_back(connector);
+}
+
 void Simulator::UpdateUi() {
   for (int32_t i = 0; i < circuits.size(); i++) {
-    circuits[i]->UpdateUi();
+    circuits[i]->UpdateUi(this);
   }
 }
 
 void Simulator::UpdateSimulation() {
-  std::deque<Connector*> connector_queue = {};
-
   for (Component* component : components) {
     if (component->Process()) {
-      connector_queue.push_back(component->GetOut());
+      PushDirtyConnector(component->GetOut());
     }
   }
 
-  while (!connector_queue.empty()) {
-    Connector* connector = connector_queue.front();
-    connector_queue.pop_front();
+  while (!dirty_connectors.empty()) {
+    Connector* connector = dirty_connectors.front();
+    dirty_connectors.pop_front();
     for (Component* component : *connector->GetConnections()) {
       if (component->Process()) {
-        connector_queue.push_back(component->GetOut());
+        dirty_connectors.push_back(component->GetOut());
       }
     }
   }

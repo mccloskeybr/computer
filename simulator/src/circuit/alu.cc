@@ -42,17 +42,36 @@ void Build1BitAdder(
     ->SetOut(c_out);
 }
 
-EightBitAdder::EightBitAdder(
-      Simulator* sim, std::string name,
-      std::array<Connector*, 8> a, std::array<Connector*, 8> b, std::array<Connector*, 8> s,
-      Connector* c_in, Connector* c_out) {
+EightBitAdder::EightBitAdder(std::string name) {
   this->name = name;
-  this->a = a;
-  this->b = b;
-  this->s = s;
-  this->c_in = c_in;
-  this->c_out = c_out;
+}
 
+EightBitAdder* EightBitAdder::SetA(std::array<Connector*, 8> a_) {
+  this->a = a_;
+  return this;
+}
+
+EightBitAdder* EightBitAdder::SetB(std::array<Connector*, 8> b_) {
+  this->b = b_;
+  return this;
+}
+
+EightBitAdder* EightBitAdder::SetS(std::array<Connector*, 8> s_) {
+  this->s = s_;
+  return this;
+}
+
+EightBitAdder* EightBitAdder::SetCarryIn(Connector* c_in_) {
+  this->c_in = c_in_;
+  return this;
+}
+
+EightBitAdder* EightBitAdder::SetCarryOut(Connector* c_out_) {
+  this->c_out = c_out_;
+  return this;
+}
+
+EightBitAdder* EightBitAdder::Build(Simulator* sim) {
   Connector* current_c_in = NULL;
   Connector* current_c_out = c_in;
   for (int32_t i = 0; i < 8; i++) {
@@ -61,36 +80,37 @@ EightBitAdder::EightBitAdder(
     else       { current_c_out = c_out; }
     Build1BitAdder(sim, a[i], b[i], current_c_in, s[i], current_c_out);
   }
+  return this;
 }
 
-void EightBitAdder::UpdateUi() {
+void EightBitAdder::UpdateUi(Simulator* sim) {
   ImGui::Begin(name.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize);
 
   ImGui::Text("A: ");
   for (int32_t i = 0; i < 8; i++) {
     ImGui::SameLine();
-    a.at(i)->UpdateUi(true);
+    a[i]->UpdateUi(sim);
   }
 
   ImGui::Text("B: ");
   for (int32_t i = 0; i < 8; i++) {
     ImGui::SameLine();
-    b[i]->UpdateUi(true);
+    b[i]->UpdateUi(sim);
   }
 
   ImGui::Text("Carry in: ");
   ImGui::SameLine();
-  c_in->UpdateUi(true);
+  c_in->UpdateUi(sim);
 
   ImGui::Text("Sum: ");
   for (int32_t i = 0; i < 8; i++) {
     ImGui::SameLine();
-    s[i]->UpdateUi(false);
+    s[i]->UpdateUi(sim);
   }
 
   ImGui::Text("Carry out: ");
   ImGui::SameLine();
-  c_out->UpdateUi(false);
+  c_out->UpdateUi(sim);
 
   ImGui::End();
 }

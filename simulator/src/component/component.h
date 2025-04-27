@@ -16,7 +16,7 @@ class Connector {
   bool SetSignal(SignalType s);
   void AddConnection(class Component* component);
   const std::vector<class Component*>* GetConnections();
-  void UpdateUi(bool is_modifyable);
+  void UpdateUi(class Simulator* sim);
 
  private:
   SignalType signal;
@@ -24,15 +24,12 @@ class Connector {
   const int32_t id = next_connector_id++;
 };
 
-static int next_component_id = 0;
 class Component {
  public:
   virtual ~Component() = default;
   virtual bool Process() = 0;
   virtual Connector* GetOut() = 0;
   operator Connector*() { return GetOut(); }
-
-  const int32_t id = next_component_id++;
 };
 
 class Buffer : public Component {

@@ -14,9 +14,11 @@ class Simulator {
 
   void UpdateUi();
   void UpdateSimulation();
+  void PushDirtyConnector(Connector* connector);
 
  private:
   std::vector<Connector*> connectors;
   std::vector<Component*> components;
   std::vector<Circuit*> circuits;
+  std::deque<Connector*> dirty_connectors;
 };
