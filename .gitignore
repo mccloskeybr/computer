@@ -2,3 +2,6 @@
 *.kicad_pro
 schematic/computer-backups*
 schematic/#auto_saved_files#
+simulator/build/*
+simulator/lib/*
+simulator/bin/*
