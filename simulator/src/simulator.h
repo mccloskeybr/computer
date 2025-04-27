@@ -1,14 +1,10 @@
-struct ObservableConnector {
-  Connector* connector;
-  std::string name;
-  bool is_modifyable;
-};
+// NOTE: The Simulator is the main state holder for comprised circuits,
+// and the driver of state changes through circuit graphs.
 
-class Simulation {
+class Simulator {
  public:
-  Simulation() = default;
-  ~Simulation();
-  Connector* AddObservableConnector(std::string name, bool is_modifyable);
+  Simulator() = default;
+  ~Simulator();
   Connector* AddConnector();
 
   Clock* AddClock();
@@ -17,11 +13,13 @@ class Simulation {
   NotGate* AddNotGate();
   NandGate* AddNandGate();
 
+  void AddCircuit(Circuit* circuit);
+
   void UpdateUi();
   void UpdateSimulation();
 
  private:
-  std::vector<ObservableConnector> observable_connectors;
   std::vector<Connector*> connectors;
   std::vector<Component*> components;
+  std::vector<Circuit*> circuits;
 };

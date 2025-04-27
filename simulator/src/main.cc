@@ -25,11 +25,18 @@
 #include <common/log.h>
 #include <common/macros.h>
 
-#include <component.h>
+#include <component/component.h>
+#include <circuit/circuit.h>
 #include <simulator.h>
 
-#include <circuits.cc>
-#include <component.cc>
+#include <component/buffer.cc>
+#include <component/tri_state_buffer.cc>
+#include <component/clock.cc>
+#include <component/not_gate.cc>
+#include <component/nand_gate.cc>
+#include <component/connector.cc>
+#include <circuit/alu.cc>
+#include <circuit/register.cc>
 #include <simulator.cc>
 
 static bool global_running;
@@ -107,43 +114,9 @@ int main(int argc, char* argv[]) {
   ImGui_ImplOpenGL3_Init();
   ImGui::StyleColorsDark();
 
-  Simulation sim = {};
-
-  /*
-  Connector* c_in = sim.AddObservableConnector("c_in", true);
-  Connector* a_0_in = sim.AddObservableConnector("a_0", true);
-  Connector* a_1_in = sim.AddObservableConnector("a_1", true);
-  Connector* a_2_in = sim.AddObservableConnector("a_2", true);
-  Connector* a_3_in = sim.AddObservableConnector("a_3", true);
-  Connector* b_0_in = sim.AddObservableConnector("b_0", true);
-  Connector* b_1_in = sim.AddObservableConnector("b_1", true);
-  Connector* b_2_in = sim.AddObservableConnector("b_2", true);
-  Connector* b_3_in = sim.AddObservableConnector("b_3", true);
-  Connector* s_0_out = sim.AddObservableConnector("s_0", false);
-  Connector* s_1_out = sim.AddObservableConnector("s_1", false);
-  Connector* s_2_out = sim.AddObservableConnector("s_2", false);
-  Connector* s_3_out = sim.AddObservableConnector("s_3", false);
-  Connector* c_out = sim.AddObservableConnector("c_out", false);
-  Build4BitAdder(
-      &sim,
-      a_0_in, a_1_in, a_2_in, a_3_in,
-      b_0_in, b_1_in, b_2_in, b_3_in,
-      c_in,
-      s_0_out, s_1_out, s_2_out, s_3_out,
-      c_out);
-  */
-
-  Connector* clock_signal = sim.AddObservableConnector("clock", false);
-  Clock* clock = sim.AddClock();
-  clock->SetOut(clock_signal);
-
-  Connector* d_in = sim.AddObservableConnector("d_in", true);
-  Connector* d_out = sim.AddObservableConnector("d_out", true);
-  Connector* d_0 = sim.AddObservableConnector("d_0", true);
-  Connector* d_1 = sim.AddObservableConnector("d_1", true);
-  Connector* d_2 = sim.AddObservableConnector("d_2", true);
-  Connector* d_3 = sim.AddObservableConnector("d_3", true);
-  Build4BitRegister(&sim, clock_signal, d_in, d_out, d_0, d_1, d_2, d_3);
+  Simulator sim = {};
+  sim.AddCircuit(new EightBitAdder(&sim));
+  sim.AddCircuit(new EightBitRegister(&sim));
 
   LOG_INFO("Successfully completed startup sequence.");
 

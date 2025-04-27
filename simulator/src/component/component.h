@@ -1,8 +1,14 @@
+// NOTE: Components are individual logic units, like gates.
+// They are composed to derive circuit flows.
+// Components are essentially a graph, where edges are modeled by
+// special components called Connectors.
+
 enum SignalType {
   SignalType_Low,
   SignalType_High,
 };
 
+static int next_connector_id = 0;
 class Connector {
  public:
   Connector();
@@ -10,10 +16,12 @@ class Connector {
   bool SetSignal(SignalType s);
   void AddConnection(class Component* component);
   const std::vector<class Component*>* GetConnections();
+  void UpdateUi(bool is_modifyable);
 
  private:
   SignalType signal;
   std::vector<class Component*> connections;
+  const int32_t id = next_connector_id++;
 };
 
 static int next_component_id = 0;
