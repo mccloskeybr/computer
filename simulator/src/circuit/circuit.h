@@ -72,5 +72,3 @@ class EightBitRegister : public Circuit {
   Connector* d_in_en;
   Connector* d_out_en;
 };
-
-void BuildComputer(class Simulator* sim);
