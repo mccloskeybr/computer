@@ -72,3 +72,17 @@ class EightBitRegister : public Circuit {
   Connector* d_in_en;
   Connector* d_out_en;
 };
+
+class EightBitRingCounter : public Circuit {
+ public:
+  explicit EightBitRingCounter(std::string name);
+  EightBitRingCounter* SetClock(Connector* clock);
+  EightBitRingCounter* SetReset(Connector* clock);
+  EightBitRingCounter* Build(class Simulator* sim);
+  void UpdateUi(class Simulator* sim) override;
+
+  std::string name;
+  std::array<Connector*, 8> d;
+  Connector* clock;
+  Connector* reset;
+};

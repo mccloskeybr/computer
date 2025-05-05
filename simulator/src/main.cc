@@ -40,6 +40,7 @@
 #include <circuit/bus.cc>
 #include <circuit/register.cc>
 #include <circuit/control.cc>
+#include <circuit/ring_counter.cc>
 #include <computer.cc>
 #include <simulator.cc>
 

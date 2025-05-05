@@ -2,6 +2,15 @@ void BuildComputer(class Simulator* sim) {
   auto* control = sim->AddCircuit<ControlBoard>("Control")
     ->Build(sim);
 
+#if 1
+
+  auto* counter = sim->AddCircuit<EightBitRingCounter>("Counter")
+    ->SetClock(control->clock)
+    ->SetReset(sim->AddConnector())
+    ->Build(sim);
+
+#else
+
   auto* d_bus = sim->AddCircuit<EightBitBus>("Bus")
     ->Build(sim);
   auto* adder_a_bus = sim->AddCircuit<EightBitBus>("Adder A Bus")
@@ -40,4 +49,6 @@ void BuildComputer(class Simulator* sim) {
     ->SetCarryIn(sim->AddConnector())
     ->SetCarryOut(sim->AddConnector())
     ->Build(sim);
+#endif
+
 }
