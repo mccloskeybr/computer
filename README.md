@@ -15,4 +15,6 @@ See directories:
 *   `schematic`: Kicad schematics for board modules / logic units.
 *   `simulator`: Software simulator to prototype different modules.
 
+[![demo](https://raw.githubusercontent.com/mccloskeybr/computer/main/res/computer.jpg)](https://raw.githubusercontent.com/mccloskeybr/computer/main/res/loop_plus_one.mp4)
+
 ![picture](res/computer.jpg)
