@@ -12,6 +12,7 @@ The goal is to run Basic unassisted on this CPU.
 See directories:
 
 *   `component_tests`: Arduino `.ino` files for testing board modules.
+*   `datasheet`: Datasheets of major components used to build computer.
 *   `schematic`: Kicad schematics for board modules / logic units.
 *   `simulator`: Software simulator to prototype different modules.
 
