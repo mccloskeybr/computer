@@ -1,4 +1,5 @@
 #include <bitset>
+#include <cassert>
 #include <format>
 #include <string>
 #include <vector>
@@ -40,8 +41,8 @@ static const Instruction INSTRUCTIONS[] = {
 int main(int argc, char** argv) {
   // NOTE: buffer_size encapsulates the entire data block for 1 EEPROM. The
   // AS6C62256 has 15 address lines, each stores 1 byte.
-  size_t buffer_size = (1 << 16) - 1;
-  char* buffer = (char*) malloc(buffer_size);
+  size_t buffer_size = 0x7fff;
+  uint8_t* buffer = (uint8_t*) malloc(buffer_size * sizeof(uint8_t));
 
   // NOTE: each EEPROM can only output 1 byte / 8 control flags, but we want to
   // support more than 8 control flags. Therefore, break each control line into
@@ -55,8 +56,8 @@ int main(int argc, char** argv) {
   // EEPROM_2 -> 0000 0001
   //
   // this allows us to feed the particular micro op as an address into all
-  // EEPROMs (calculated as op_code + micro_op_index) and concatenate the
-  // results together to build the final control line.
+  // EEPROMs (bits 0-8 = op_code, bits 9-12 = micro_op_index) and concatenate
+  // the results together to build the final control line.
   int32_t set = 0;
   int64_t mask = 0;
   do {
@@ -71,14 +72,15 @@ int main(int argc, char** argv) {
     for (const Instruction& inst : INSTRUCTIONS) {
       fprintf(stdout, "%s: %s\n", file_name.c_str(), inst.name);
       for (int32_t i = 0; i < inst.micro_ops.size(); i++) {
-        uint16_t op_code = ((uint16_t) (inst.op_code)) + i;
+        assert(i < 0xf); // only 4 bits allowed for micro ops.
+        uint16_t op_code = (inst.op_code << 8) + (i << 4);
         uint8_t control_line_chunk = (inst.micro_ops[i] & mask) >> shift;
         fprintf(stdout, "%X: %s\n", op_code, std::bitset<8>(control_line_chunk).to_string().c_str());
         buffer[op_code] = control_line_chunk;
       }
     }
 
-    fwrite(buffer, sizeof(char), buffer_size, file);
+    fwrite(buffer, sizeof(uint8_t), buffer_size, file);
     fclose(file);
 
     set++;
