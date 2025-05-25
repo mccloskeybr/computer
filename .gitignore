@@ -5,3 +5,6 @@ schematic/#auto_saved_files#
 simulator/build/*
 simulator/lib/*
 simulator/bin/*
+gen_inst_rom/build/*
+gen_inst_rom/bin/*
+gen_inst_rom/*.bin

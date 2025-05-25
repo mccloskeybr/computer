@@ -13,6 +13,7 @@ See directories:
 
 *   `component_tests`: Arduino `.ino` files for testing board modules.
 *   `datasheet`: Datasheets of major components used to build computer.
+*   `gen_inst_rom`: Logic to generate the instruction / micro op -> control line EEPROM mappings.
 *   `schematic`: Kicad schematics for board modules / logic units.
 *   `simulator`: Software simulator to prototype different modules.
 
