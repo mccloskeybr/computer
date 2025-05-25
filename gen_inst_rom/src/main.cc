@@ -15,7 +15,8 @@ enum ControlFlag : uint64_t {
   DB_EN    = 1 << 5,
   OP_INC   = 1 << 6,
   OP_RESET = 1 << 7,
-  MAX      = OP_RESET,
+  INST_IN  = 1 << 8,
+  MAX      = INST_IN,
 };
 
 struct Instruction {
@@ -30,8 +31,8 @@ static const Instruction INSTRUCTIONS[] = {
     .name = "NOP",
     .op_code = 0xEA,
     .micro_ops = {
-      PC_OUT | PC_INC | PC_IN | OP_INC,  // inc program counter
-      PC_OUT | DB_EN | PC_IN | OP_RESET, // load next value in inst stream to program counter
+      PC_OUT | PC_INC | PC_IN | OP_INC,    // inc program counter
+      PC_OUT | DB_EN | INST_IN | OP_RESET, // load next value in inst stream to program counter
     },
   },
   {
@@ -39,10 +40,10 @@ static const Instruction INSTRUCTIONS[] = {
     .name = "LDY #",
     .op_code = 0xA0,
     .micro_ops = {
-      PC_OUT | PC_INC | PC_IN | OP_INC,  // inc program counter
-      PC_OUT | DB_EN | Y_IN | OP_INC,    // load next value in inst stream in Y
-      PC_OUT | PC_INC | PC_IN | OP_INC,  // inc program counter
-      PC_OUT | DB_EN | PC_IN | OP_RESET, // load next value in inst stream in program counter
+      PC_OUT | PC_INC | PC_IN | OP_INC,    // inc program counter
+      PC_OUT | DB_EN | Y_IN | OP_INC,      // load next value in inst stream in Y
+      PC_OUT | PC_INC | PC_IN | OP_INC,    // inc program counter
+      PC_OUT | DB_EN | INST_IN | OP_RESET, // load next value in inst stream in program counter
     },
   },
 };
