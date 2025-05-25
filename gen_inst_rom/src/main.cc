@@ -29,9 +29,9 @@ static const Instruction INSTRUCTIONS[] = {
     .name = "LDY #",
     .op_code = 0xA0,
     .micro_ops = {
-      PC_INC | OP_INC,                   // inc program counter
+      PC_INC | PC_IN | OP_INC,           // inc program counter
       PC_OUT | DB_EN | Y_IN | OP_INC,    // load next value in inst stream in Y
-      PC_INC | OP_INC,                   // inc program counter
+      PC_INC | PC_IN | OP_INC,           // inc program counter
       PC_OUT | DB_EN | PC_IN | OP_RESET, // load next value in inst stream in program counter
     },
   },
@@ -71,10 +71,10 @@ int main(int argc, char** argv) {
     for (const Instruction& inst : INSTRUCTIONS) {
       fprintf(stdout, "%s: %s\n", file_name.c_str(), inst.name);
       for (int32_t i = 0; i < inst.micro_ops.size(); i++) {
-        uint16_t address = ((uint16_t) (inst.op_code)) + i;
-        uint8_t code = (uint8_t) ((inst.micro_ops[i] & mask) >> shift);
-        fprintf(stdout, "%X: %s\n", address, std::bitset<8>(code).to_string().c_str());
-        buffer[address] = code;
+        uint16_t op_code = ((uint16_t) (inst.op_code)) + i;
+        uint8_t control_line_chunk = (inst.micro_ops[i] & mask) >> shift;
+        fprintf(stdout, "%X: %s\n", op_code, std::bitset<8>(control_line_chunk).to_string().c_str());
+        buffer[op_code] = control_line_chunk;
       }
     }
 
@@ -83,5 +83,6 @@ int main(int argc, char** argv) {
 
     set++;
   } while ((mask & MAX) == 0);
+
   return 0;
 }
